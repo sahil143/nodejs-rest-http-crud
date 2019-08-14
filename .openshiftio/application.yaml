@@ -9,7 +9,7 @@ parameters:
   - name: SOURCE_REPOSITORY_URL
     description: The source URL for the application
     displayName: Source URL
-    value: 'https://github.com/nodeshift-starters/nodejs-rest-http-crud'
+    value: 'https://github.com/akashshinde/nodejs-rest-http-crud'
     required: true
   - name: SOURCE_REPOSITORY_REF
     description: The branch name for the application
@@ -110,6 +110,8 @@ objects:
         provider: nodeshift
         project: nodejs-rest-http-crud
         version: '${RELEASE_VERSION}'
+        connects-to: postgres
+        environment: demo
     spec:
       template:
         spec:
@@ -203,3 +205,28 @@ objects:
     stringData:
       user: luke
       password: secret
+  - apiVersion: apps.openshift.io/v1alpha1
+    kind: ServiceBindingRequest
+    metadata:
+      name: binding-request
+    spec:
+      applicationSelector:
+        matchLabels:
+          connects-to: postgres
+          environment: demo
+        resourceKind: DeploymentConfig
+      backingServiceSelector:
+        resourceKind: postgresql.baiju.dev
+        resourceVersion: v1alpha1
+        resourceRef: db-demo
+      mountPathPrefix: “”
+      envVarPrefix: "SERVICE_BINDING"
+  - apiVersion: postgresql.baiju.dev/v1alpha1
+    kind: Database
+    metadata:
+      name: db-demo
+    spec:
+      image: docker.io/postgres
+      imageName: postgres
+      dbName: db-demo
+
