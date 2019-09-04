@@ -205,22 +205,6 @@ objects:
     stringData:
       user: luke
       password: secret
-  - apiVersion: apps.openshift.io/v1alpha1
-    kind: ServiceBindingRequest
-    metadata:
-      name: binding-request
-    spec:
-      applicationSelector:
-        matchLabels:
-          connects-to: postgres
-          environment: demo
-        resourceKind: DeploymentConfig
-      backingServiceSelector:
-        resourceKind: postgresql.baiju.dev
-        resourceVersion: v1alpha1
-        resourceRef: db-demo
-      mountPathPrefix: “”
-      envVarPrefix: "SERVICE_BINDING"
   - apiVersion: postgresql.baiju.dev/v1alpha1
     kind: Database
     metadata:

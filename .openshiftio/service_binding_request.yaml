@@ -2,15 +2,20 @@ apiVersion: apps.openshift.io/v1alpha1
 kind: ServiceBindingRequest
 metadata:
   name: binding-request
-  namespace: service-binding-demo
 spec:
   applicationSelector:
     matchLabels:
       connects-to: postgres
       environment: demo
-    resourceKind: DeploymentConfig
+    group: apps.openshift.io
+    version: v1
+    resource: deploymentconfigs
   backingServiceSelector:
-    resourceKind: postgresql.baiju.dev
-    resourceVersion: v1alpha1
+    group: postgresql.baiju.dev
+    version: v1alpha1
+    kind: Database
     resourceRef: db-demo
   mountPathPrefix: “”
+  envVar:
+    - name: JDBC_CONNECTION_STRING
+      value: '{{ .spec.imageName }}@{{ .spec.image }}_{{ index .status.dbConfigMap "db.username" }}'
