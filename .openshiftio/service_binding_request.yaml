@@ -10,12 +10,13 @@ spec:
     group: apps.openshift.io
     version: v1
     resource: deploymentconfigs
+    resourceRef: ""
   backingServiceSelector:
     group: postgresql.baiju.dev
     version: v1alpha1
     kind: Database
     resourceRef: db-demo
   mountPathPrefix: “”
-  envVar:
-    - name: JDBC_CONNECTION_STRING
-      value: '{{ .spec.imageName }}@{{ .spec.image }}_{{ index .status.dbConfigMap "db.username" }}'
+  customEnvVar: []
+  detectBindingResources: true
+
